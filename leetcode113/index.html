@@ -6,18 +6,15 @@
         <meta name="robots" content="noodp" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
         <title>113. Path Sum II - ChenMin</title><meta name="Description" content=""><meta property="og:title" content="113. Path Sum II" />
-<meta property="og:description" content="Given the root of a binary tree and an integer targetSum, return all root-to-leaf paths where the sum of the node values in the path equals targetSum. Each path should be returned as a list of the node values, not node reference.
-A root-to-leaf path is a path starting from the root and ending at any leaf node. A leaf is a node with no children.
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25  class Solution { public: vector&lt;vector&lt;int&gt;&gt; result; vector&lt;vector&lt;int&gt;&gt; pathSum(TreeNode* root, int targetSum) { vector&lt;int&gt; currentPath; pathSum(root, targetSum, currentPath, 0); return result; } void pathSum(TreeNode* root, int targetSum, vector&lt;int&gt; currentPath, int currentSum) { if (root == NULL) { return; } currentPath." />
+<meta property="og:description" content="Given the root of a binary tree and an integer targetSum, return all root-to-leaf paths where the sum of the node values in the path equals targetSum. Each path should be returned as a list of the node values, not node reference. A root-to-leaf path is a path starting from the root and ending at any leaf node. A leaf is a node with no children. 1 2 3 4" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://imchenmin.com/leetcode113/" />
 <meta property="article:published_time" content="2021-10-29T11:06:41+08:00" />
-<meta property="article:modified_time" content="2021-10-29T11:06:41+08:00" />
+<meta property="article:modified_time" content="2021-10-29T11:06:41+08:00" /><meta property="og:see_also" content="http://imchenmin.com/leetcode1028/" /><meta property="og:see_also" content="http://imchenmin.com/leetcode124/" /><meta property="og:see_also" content="http://imchenmin.com/leetcode112/" /><meta property="og:see_also" content="http://imchenmin.com/leetcode105/" /><meta property="og:see_also" content="http://imchenmin.com/leetcode99/" />
+
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="113. Path Sum II"/>
-<meta name="twitter:description" content="Given the root of a binary tree and an integer targetSum, return all root-to-leaf paths where the sum of the node values in the path equals targetSum. Each path should be returned as a list of the node values, not node reference.
-A root-to-leaf path is a path starting from the root and ending at any leaf node. A leaf is a node with no children.
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25  class Solution { public: vector&lt;vector&lt;int&gt;&gt; result; vector&lt;vector&lt;int&gt;&gt; pathSum(TreeNode* root, int targetSum) { vector&lt;int&gt; currentPath; pathSum(root, targetSum, currentPath, 0); return result; } void pathSum(TreeNode* root, int targetSum, vector&lt;int&gt; currentPath, int currentSum) { if (root == NULL) { return; } currentPath."/>
+<meta name="twitter:description" content="Given the root of a binary tree and an integer targetSum, return all root-to-leaf paths where the sum of the node values in the path equals targetSum. Each path should be returned as a list of the node values, not node reference. A root-to-leaf path is a path starting from the root and ending at any leaf node. A leaf is a node with no children. 1 2 3 4"/>
 <meta name="application-name" content="ChenMin">
 <meta name="apple-mobile-web-app-title" content="ChenMin"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -106,7 +103,7 @@ A root-to-leaf path is a path starting from the root and ending at any leaf node
             <h2 class="toc-title">目录</h2>
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">113. Path Sum II</h1><div class="post-meta">
-            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>ChenMin</a></span></div>
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>ChenMin</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/"><i class="far fa-folder fa-fw"></i>计算机</a></span></div>
             <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-10-29">2021-10-29</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 159 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 1 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
