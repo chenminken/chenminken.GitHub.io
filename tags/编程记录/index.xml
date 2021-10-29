@@ -1,0 +1,14 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>编程记录 - 标签 - ChenMin</title>
+        <link>http://imchenmin.com/tags/%E7%BC%96%E7%A8%8B%E8%AE%B0%E5%BD%95/</link>
+        <description>编程记录 - 标签 - ChenMin</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 22 Nov 2020 20:33:53 &#43;0000</lastBuildDate><atom:link href="http://imchenmin.com/tags/%E7%BC%96%E7%A8%8B%E8%AE%B0%E5%BD%95/" rel="self" type="application/rss+xml" /><item>
+    <title>OpenCV和numpy笔记</title>
+    <link>http://imchenmin.com/opencv%E5%92%8Cnumpy%E7%AC%94%E8%AE%B0/</link>
+    <pubDate>Sun, 22 Nov 2020 20:33:53 &#43;0000</pubDate>
+    <author>作者</author>
+    <guid>http://imchenmin.com/opencv%E5%92%8Cnumpy%E7%AC%94%E8%AE%B0/</guid>
+    <description><![CDATA[使用K-means做视频图像分割的作业的时候，遇到一个问题值得记录。 该代码的功能是使用K-means做图像分割并保存图像与视频。 遇到的问题是]]></description>
+</item></channel>
+</rss>

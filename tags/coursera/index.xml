@@ -1,0 +1,14 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Coursera - 标签 - ChenMin</title>
+        <link>http://imchenmin.com/tags/coursera/</link>
+        <description>Coursera - 标签 - ChenMin</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Fri, 13 Sep 2019 23:02:24 &#43;0000</lastBuildDate><atom:link href="http://imchenmin.com/tags/coursera/" rel="self" type="application/rss+xml" /><item>
+    <title>Machine Learning Week1 Note</title>
+    <link>http://imchenmin.com/machine-learning-week1-note/</link>
+    <pubDate>Fri, 13 Sep 2019 23:02:24 &#43;0000</pubDate>
+    <author>作者</author>
+    <guid>http://imchenmin.com/machine-learning-week1-note/</guid>
+    <description><![CDATA[此系列博文是学习Coursera上Stanford的《Machine Learning》MOOC的笔记。 课程共分为11周，大约需要56小时学习]]></description>
+</item></channel>
+</rss>
