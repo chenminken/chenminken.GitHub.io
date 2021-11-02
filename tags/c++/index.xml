@@ -3,7 +3,21 @@
         <title>C&#43;&#43; - 标签 - ChenMin</title>
         <link>http://imchenmin.com/tags/c&#43;&#43;/</link>
         <description>C&#43;&#43; - 标签 - ChenMin</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 01 Nov 2021 23:14:08 &#43;0800</lastBuildDate><atom:link href="http://imchenmin.com/tags/c&#43;&#43;/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 02 Nov 2021 14:34:58 &#43;0800</lastBuildDate><atom:link href="http://imchenmin.com/tags/c&#43;&#43;/" rel="self" type="application/rss+xml" /><item>
+    <title>300.Longest Increasing Subsequence</title>
+    <link>http://imchenmin.com/leetcode300/</link>
+    <pubDate>Tue, 02 Nov 2021 14:34:58 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://imchenmin.com/leetcode300/</guid>
+    <description><![CDATA[Given an integer array nums, return the length of the longest strictly increasing subsequence. A subsequence is a sequence that can be derived from an array by deleting some or no elements without changing the order of the remaining elements. For example, [3,6,2,7] is a subsequence of the array [0,3,1,6,2,2,7]. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 //]]></description>
+</item><item>
+    <title>53. Maximum Subarray</title>
+    <link>http://imchenmin.com/leetcode53/</link>
+    <pubDate>Tue, 02 Nov 2021 14:34:18 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://imchenmin.com/leetcode53/</guid>
+    <description><![CDATA[Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum . A subarray is a contiguous part of an array. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 class Solution { public: int maxSubArray(vector&lt;int&gt;&amp; nums) { vector&lt;int&gt; dp(nums.size(), 0); dp[0] = nums[0]; for (int i=1; i&lt;dp.size(); i++) {]]></description>
+</item><item>
     <title>322.Coin Change</title>
     <link>http://imchenmin.com/leetcode322/</link>
     <pubDate>Mon, 01 Nov 2021 23:14:08 &#43;0800</pubDate>
@@ -59,19 +73,5 @@
     <author>作者</author>
     <guid>http://imchenmin.com/leetcode99/</guid>
     <description><![CDATA[You are given the root of a binary search tree (BST), where the values of exactly two nodes of the tree were swapped by mistake. Recover the tree without changing its structure. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38]]></description>
-</item><item>
-    <title>94Binary Tree Inorder Traversal</title>
-    <link>http://imchenmin.com/leetcode94/</link>
-    <pubDate>Fri, 29 Oct 2021 08:58:46 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://imchenmin.com/leetcode94/</guid>
-    <description><![CDATA[Given the root of a binary tree, return the inorder traversal of its nodes' values. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 /** * Definition for a binary tree node. * struct TreeNode { * int val; * TreeNode *left; * TreeNode *right; * TreeNode() : val(0), left(nullptr), right(nullptr) {}]]></description>
-</item><item>
-    <title>LeetCode26</title>
-    <link>http://imchenmin.com/leetcode26/</link>
-    <pubDate>Mon, 23 Nov 2020 19:37:45 &#43;0000</pubDate>
-    <author>作者</author>
-    <guid>http://imchenmin.com/leetcode26/</guid>
-    <description><![CDATA[关键词：数组去重 题目描述： Given a sorted array nums, remove the duplicates in-place such that each element appear only once and return the new length. Do not allocate extra space for another array, you must do this by modifying the input array in-place with O(1) extra memory. 这道题需要更改原始输入的数组]]></description>
 </item></channel>
 </rss>
