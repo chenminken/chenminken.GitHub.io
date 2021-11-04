@@ -3,7 +3,21 @@
         <title>Leet Code - 标签 - ChenMin</title>
         <link>http://imchenmin.com/tags/leet-code/</link>
         <description>Leet Code - 标签 - ChenMin</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 03 Nov 2021 22:55:04 &#43;0800</lastBuildDate><atom:link href="http://imchenmin.com/tags/leet-code/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 04 Nov 2021 13:57:41 &#43;0800</lastBuildDate><atom:link href="http://imchenmin.com/tags/leet-code/" rel="self" type="application/rss+xml" /><item>
+    <title>82. Remove Duplicates from Sorted List II</title>
+    <link>http://imchenmin.com/leetcode82/</link>
+    <pubDate>Thu, 04 Nov 2021 13:57:41 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://imchenmin.com/leetcode82/</guid>
+    <description><![CDATA[Given the head of a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers from the original list . Return the linked list sorted as well . 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 class Solution { public: ListNode* deleteDuplicates(ListNode* head) { //base]]></description>
+</item><item>
+    <title>61.Rotate List</title>
+    <link>http://imchenmin.com/leetcode61/</link>
+    <pubDate>Thu, 04 Nov 2021 13:57:34 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://imchenmin.com/leetcode61/</guid>
+    <description><![CDATA[Given the head of a linked list, rotate the list to the right by k places. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 class Solution { public: ListNode* rotateRight(ListNode* head, int k) { // 建立一个环，维持local 和 ta]]></description>
+</item><item>
     <title>23.Merge k Sorted Lists</title>
     <link>http://imchenmin.com/leetcode23/</link>
     <pubDate>Wed, 03 Nov 2021 22:55:04 &#43;0800</pubDate>
@@ -59,19 +73,5 @@
     <author>作者</author>
     <guid>http://imchenmin.com/leetcode124/</guid>
     <description><![CDATA[A path in a binary tree is a sequence of nodes where each pair of adjacent nodes in the sequence has an edge connecting them. A node can only appear in the sequence at most once. Note that the path does not need to pass through the root. The path sum of a path is the sum of the node&rsquo;s values in the path. Given the root of a binary]]></description>
-</item><item>
-    <title>113. Path Sum II</title>
-    <link>http://imchenmin.com/leetcode113/</link>
-    <pubDate>Fri, 29 Oct 2021 11:06:41 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://imchenmin.com/leetcode113/</guid>
-    <description><![CDATA[Given the root of a binary tree and an integer targetSum, return all root-to-leaf paths where the sum of the node values in the path equals targetSum. Each path should be returned as a list of the node values, not node reference. A root-to-leaf path is a path starting from the root and ending at any leaf node. A leaf is a node with no children. 1 2 3 4]]></description>
-</item><item>
-    <title>112. Path Sum</title>
-    <link>http://imchenmin.com/leetcode112/</link>
-    <pubDate>Fri, 29 Oct 2021 11:06:39 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://imchenmin.com/leetcode112/</guid>
-    <description><![CDATA[Given the root of a binary tree and an integer targetSum, return true if the tree has a root-to-leaf path such that adding up all the values along the path equals targetSum. A leaf is a node with no children. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 class Solution { public: bool hasPathSum(TreeNode* root, int targetSum, int]]></description>
 </item></channel>
 </rss>
