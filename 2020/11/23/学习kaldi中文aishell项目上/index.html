@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>学习Kaldi：中文Aishell项目（上） - ChenMin</title><meta name="Description" content=""><meta property="og:title" content="学习Kaldi：中文Aishell项目（上）" />
+<meta property="og:description" content="这篇文章是学习Kaldi的第二篇。对应SUSTech CS310课程的Lab6和Lab7。 第一篇里探索了如何对toy language（仅包含两" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://imchenmin.com/2020/11/23/%E5%AD%A6%E4%B9%A0kaldi%E4%B8%AD%E6%96%87aishell%E9%A1%B9%E7%9B%AE%E4%B8%8A/" />
+<meta property="article:published_time" content="2020-11-23T19:36:51+00:00" />
+<meta property="article:modified_time" content="2020-11-23T19:36:51+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="学习Kaldi：中文Aishell项目（上）"/>
+<meta name="twitter:description" content="这篇文章是学习Kaldi的第二篇。对应SUSTech CS310课程的Lab6和Lab7。 第一篇里探索了如何对toy language（仅包含两"/>
+<meta name="application-name" content="ChenMin">
+<meta name="apple-mobile-web-app-title" content="ChenMin"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://imchenmin.com/2020/11/23/%E5%AD%A6%E4%B9%A0kaldi%E4%B8%AD%E6%96%87aishell%E9%A1%B9%E7%9B%AE%E4%B8%8A/" /><link rel="prev" href="http://imchenmin.com/2020/11/23/%E4%BD%BF%E7%94%A8python%E5%BC%80%E5%8F%91%E6%A1%8C%E9%9D%A2%E5%BA%94%E7%94%A8%E7%9A%84%E4%B8%80%E4%B8%AA%E4%BD%93%E9%AA%8C/" /><link rel="next" href="http://imchenmin.com/2020/11/23/leetcode26/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "学习Kaldi：中文Aishell项目（上）",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/imchenmin.com\/2020\/11\/23\/%E5%AD%A6%E4%B9%A0kaldi%E4%B8%AD%E6%96%87aishell%E9%A1%B9%E7%9B%AE%E4%B8%8A\/"
+        },"genre": "posts","keywords": "NLP, ASR","wordcount":  5798 ,
+        "url": "http:\/\/imchenmin.com\/2020\/11\/23\/%E5%AD%A6%E4%B9%A0kaldi%E4%B8%AD%E6%96%87aishell%E9%A1%B9%E7%9B%AE%E4%B8%8A\/","datePublished": "2020-11-23T19:36:51+00:00","dateModified": "2020-11-23T19:36:51+00:00","publisher": {
+            "@type": "Organization",
+            "name": "ChenMin"},"author": {
+                "@type": "Person",
+                "name": "ChenMin"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : '' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="ChenMin"><span id="id-1" class="typeit"></span></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search anything" id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="ChenMin"><span id="id-2" class="typeit"></span></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search anything" id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">学习Kaldi：中文Aishell项目（上）</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>ChenMin</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/"><i class="far fa-folder fa-fw"></i>计算机</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-11-23">2020-11-23</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5798 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 12 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#aishell描述和下载">AiShell描述和下载</a></li>
+    <li><a href="#运行runsh脚本一步到位">运行run.sh脚本，一步到位</a></li>
+    <li><a href="#查看结果">查看结果</a></li>
+    <li><a href="#细节">细节</a>
+      <ul>
+        <li><a href="#准备">准备</a>
+          <ul>
+            <li><a href="#4-phone-sets-questions-l-compilation">4. Phone sets, questions, L compilation</a></li>
+            <li><a href="#5-lm-training">5. LM training</a></li>
+            <li><a href="#6-g-compilation-check-lg-composition">6. G compilation, check LG composition</a></li>
+          </ul>
+        </li>
+        <li><a href="#训练">训练</a>
+          <ul>
+            <li><a href="#1-mfcc-特征生成">1. MFCC 特征生成</a></li>
+            <li><a href="#2-训练单音素模型">2. 训练单音素模型</a></li>
+            <li><a href="#3-monophone-decoding-单音素解码">3. (Monophone decoding) 单音素解码</a></li>
+            <li><a href="#看不懂的部分">看不懂的部分</a></li>
+          </ul>
+        </li>
+        <li><a href="#获取结果">获取结果</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>这篇文章是学习Kaldi的第二篇。对应SUSTech CS310课程的Lab6和Lab7。
+第一篇里探索了如何对toy language（仅包含两个单音素单词）进行语言模型的建模。至于训练和解码的部分，时间条件和理解能力暂时不允许去整理。
+本篇文章的主要目标是理解复杂的中文多音素语言模型和使用AiShell语料集来真实的训练出一个可用的中文语音识别模型。完整的AiShell例子包含GMM-HMM和神经网络。Lab6先展示了GMM-HMM后的结果。Lab7则补充了神经网络。</p>
+<h2 id="aishell描述和下载">AiShell描述和下载</h2>
+<p>AiShell 是 ？？公司开源的中文普通话语料集。400个来自不同方言区的人参与录制， 录制的条件是在室内使用高保真的麦克风，音频降采样到16000Hz。
+//中文文字脚本95%的准确度
+//170小时的语料。划分为85%的训练集，10%的开发集（作用？），5%的测试集。在上课的时候我被录制语料的成本吓到了，2000小时的语料大约需要100万人民币的费用。
+AiShell语料集可以免费由于学术目的。</p>
+<p>语料集下载
+Kaldi中包含Aishell的示例脚本。在<code>kaldi/egs/aishell/s5</code>中。下文所有的文件都在该目录之下。
+下载语料集的脚本包含在<code>run.sh</code>中。
+先安装好语言模型的工具才能运行<code>run.sh</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">run ./install_kaldi_lm.sh &amp;&amp; source ../env.sh
+</code></pre></td></tr></table>
+</div>
+</div><p>上一篇文章没有说每一个项目下的s5文件夹中有什么，在网上找到了别人写的一个总结：<a href="https://www.jianshu.com/p/6ab663601da8" target="_blank" rel="noopener noreffer">kaldi 源码分析(三) - run.pl 分析</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">cmd.sh                     # 并行执行命令，通常分 run.pl, queue.pl 两种
+config                       # 参数定制化配置文件， mfcc, decode, cmvn 等配置文件
+local                         # 工程定制化内容
+path.sh                    # 环境变量相关脚本
+run.sh                      # 整体流程控制脚本，主入口脚本
+steps                       # 存放单一步骤执行的脚本
+utils                         # 存放解析文件，预处理等相
+关工具的脚本
+</code></pre></td></tr></table>
+</div>
+</div><p>最重要的入口脚本是run.sh。包含所有脚本。如果要在本地运行，需要修改这个脚本。把其中的<code>queue.pl</code>改成<code>run.pl</code>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">export train_cmd=&#34;run.pl&#34; 
+export decode_cmd=run.pl 
+export mkgraph_cmd=&#34;run.pl&#34;
+</code></pre></td></tr></table>
+</div>
+</div><p>先做Lab6，注释掉神经网络训练部分。为了对比加不加神经网络对最后的识别准确率有多大的影响。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># nnet3
+#local/nnet3/run_tdnn.sh
+# chain
+#local/chain/run_tdnn.sh
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="运行runsh脚本一步到位">运行run.sh脚本，一步到位</h2>
+<p>在上一篇文章中，主要讲了kaldi的工作流程，复杂一点的项目除了要考虑多音素的对齐以外？基本流程是差不多的。先运行整体流程脚本run.sh看一下效果。然后再具体深入进脚本中看有哪些关键步骤。</p>
+<p>你是否遇到过连接远程服务器跑训练，然后网络掉线杀掉了正在跑的进程？我遇到过，后来主要使用nohup来避免这个问题。课件里推荐使用screen来避免远程登陆进程被杀掉后，训练进程也停止的问题。screen的原理不是本篇文章关心的重点。
+加上screen后运行run.sh：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">screen -S run
+run ./run.sh
+</code></pre></td></tr></table>
+</div>
+</div><p>就能看到脚本在一个新的页面输出内容了。
+如果要结束进程<code> ctrl a + d</code>//我其实不喜欢这个命令，因为很经常使用ctrl+a来编辑命令，两个快捷键冲突。</p>
+<h2 id="查看结果">查看结果</h2>
+<p>中文语音识别的准确度通常使用CER（Char Error Rate）来表示。因为中文中字是最小语义单位，而英文中词是基本语义单位。
+和上一篇文章差不多的命令。脚本的运行结果保存在了exp目录下。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">for x in exp/*/decode_test; do [ -d $x ] &amp;&amp; grep WER $x/cer_* | utils/best_wer.sh; done 2&gt;/dev/null
+</code></pre></td></tr></table>
+</div>
+</div><p>训练出来的结果如下：
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/1246.png"
+        data-srcset="/images/1246.png, /images/1246.png 1.5x, /images/1246.png 2x"
+        data-sizes="auto"
+        alt="/images/1246.png"
+        title="训练结果" /></p>
+<p>可以<code>cat RESULTS</code>，和官方跑出来的结果做一下对比。
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/1247.png"
+        data-srcset="/images/1247.png, /images/1247.png 1.5x, /images/1247.png 2x"
+        data-sizes="auto"
+        alt="/images/1247.png"
+        title="RESULTS" />
+需要注意的是，和上篇文章的实验不一样的是，输出的结果是多行的，因为执行了多次的实验，上面的脚本输出的是每次实验最好的结果。
+我自己跑出来的最好结果是tri5a的cer_14_0.5而RESULTS中的GMM-HMM模型中最好的结果是tri5a的cer_13_0.5。两者CER都是12.12。每次实验本身都有一定的随机性。结果有一些误差是没问题的。为了确认模型有被正确的训练，查看自己结果的<code>tri5a/decode_test/cer_13_0.5</code>的CER是12.18，恰好不是最优解而已。这里的13和14是lmwt（语言模型权重）。具体的可以看上一篇文章。
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/1248.png"
+        data-srcset="/images/1248.png, /images/1248.png 1.5x, /images/1248.png 2x"
+        data-sizes="auto"
+        alt="/images/1248.png"
+        title="cer_13_0.5" /></p>
+<h2 id="细节">细节</h2>
+<p>使用命令<code>cat run.sh | grep &quot;#&quot;</code>将run.sh脚本中的环节注释提取打印出来。其中倒数2，4行是我们在一开始注释掉的。可以看到基本可以分为准备、训练和获取结果三个部分。
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/1249.png"
+        data-srcset="/images/1249.png, /images/1249.png 1.5x, /images/1249.png 2x"
+        data-sizes="auto"
+        alt="/images/1249.png"
+        title="run.sh注释部分" /></p>
+<h3 id="准备">准备</h3>
+<ol>
+<li>下载语料集
+需要注意的是aishell语料集有大概20GB的大小。意味着需要很长的时间才能下载下来。我是直接用服务器里提前下好的语料集。
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/1250.png"
+        data-srcset="/images/1250.png, /images/1250.png 1.5x, /images/1250.png 2x"
+        data-sizes="auto"
+        alt="/images/1250.png"
+        title="aishell目录概览" /></li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">local/download_and_untar.sh $data $data_url data_aishell || exit 1;
+</code></pre></td></tr></table>
+</div>
+</div><p>这里的 <code>a || b</code>是一个逻辑符号，代表着如果a执行失败则执行b。这里要放一个小插曲。去年面试阿里云的实习项目时，面试官开头就问了如何知道上一条linux命令是否成功执行。我当时不知道，现在要知道了。就是看变量<code>$?</code>的值，如果为0代表成功执行。这里的<code>exit 1</code>终止当前进程并且将<code>$?</code>设置为1。表示不成功执行。
+<code>$data</code> 是aishell在本机的位置，既可以新建一个空目录来下载，也可以指定到已经下好的路径，aishell 分为<code>resource_aishell</code>和<code>data_aishell</code>两部分来下载，脚本会通过检查每一个部分下是否有<code>.complete</code>文件来判断当前部分是否下载完全。如果没有才会到指定网址下载。
+2. Lexicon Preparation</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">local/aishell_prepare_dict.sh $data/resource_aishell || exit 1;
+</code></pre></td></tr></table>
+</div>
+</div><p>这个脚本的功能主要是将<code>resource_aishell</code>下的<code>lexicon.txt</code>复制到<code>data/local/dict</code>中。并且提取出<code>nonsilence_phones.txt</code>、<code>optional_silence.txt   </code>、<code>silence_phones.txt</code>和<code>extra_questions.txt</code>。用到了很多awk和perl的脚本。没看懂。（要是看懂了，第一次assignment就不会搞砸了）
+那就要求自己看懂把。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/1251.png"
+        data-srcset="/images/1251.png, /images/1251.png 1.5x, /images/1251.png 2x"
+        data-sizes="auto"
+        alt="/images/1251.png"
+        title="lexicon.txt" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/1252.png"
+        data-srcset="/images/1252.png, /images/1252.png 1.5x, /images/1252.png 2x"
+        data-sizes="auto"
+        alt="/images/1252.png"
+        title="提取extra_questions.txt的代码" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/1253.png"
+        data-srcset="/images/1253.png, /images/1253.png 1.5x, /images/1253.png 2x"
+        data-sizes="auto"
+        alt="/images/1253.png"
+        title="extra_questions.txt部分内容" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/1254.png"
+        data-srcset="/images/1254.png, /images/1254.png 1.5x, /images/1254.png 2x"
+        data-sizes="auto"
+        alt="/images/1254.png"
+        title="提取nonsilence_phones.txt代码" />
+每行代表一组相同的base phone,包含各种不同的重音或者声调。
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/1255.png"
+        data-srcset="/images/1255.png, /images/1255.png 1.5x, /images/1255.png 2x"
+        data-sizes="auto"
+        alt="/images/1255.png"
+        title="nonsilence_phones.txt部分内容" /></p>
+<ol start="3">
+<li>Data preparation</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">local/aishell_data_prep.sh $data/data_aishell/wav $data/data_aishell/transcript || exit 1;
+</code></pre></td></tr></table>
+</div>
+</div><p><code>$data/data_aishell/wav</code>目录下放着的是音频文件。其中有两级目录<code>speaker/filename.wav</code>。
+<code>$data/data_aishell/transcript</code>目录下放着的是<code>aishell_transcript_v0.8.txt</code>文字翻录。
+这个shell脚本的功能是将<code>$data/data_aishell/wav</code>下的 <code>train</code>,<code>test</code>,<code>dev</code>分别建立索引。并且建立Kaldi能够理解的语料格式。具体有些什么可以参考上一篇文章和下面这一段脚本。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># Transcriptions preparation
+for dir in $train_dir $dev_dir $test_dir; do
+  echo Preparing $dir transcriptions
+  # 将当前集合目录下的wav的文件名提取出来作为utt_id
+  sed -e &#39;s/\.wav//&#39; $dir/wav.flist | awk -F &#39;/&#39; &#39;{print $NF}&#39; &gt; $dir/utt.list
+  # 根据目录结构建立utt2spk的关系
+  sed -e &#39;s/\.wav//&#39; $dir/wav.flist | awk -F &#39;/&#39; &#39;{i=NF-1;printf(&#34;%s %s\n&#34;,$NF,$i)}&#39; &gt; $dir/utt2spk_all
+  # 按列合并utt.list和wav.flist，达到对音频文件的映射。
+  paste -d&#39; &#39; $dir/utt.list $dir/wav.flist &gt; $dir/wav.scp_all
+  utils/filter_scp.pl -f 1 $dir/utt.list $aishell_text &gt; $dir/transcripts.txt
+  awk &#39;{print $1}&#39; $dir/transcripts.txt &gt; $dir/utt.list
+  utils/filter_scp.pl -f 1 $dir/utt.list $dir/utt2spk_all | sort -u &gt; $dir/utt2spk
+  utils/filter_scp.pl -f 1 $dir/utt.list $dir/wav.scp_all | sort -u &gt; $dir/wav.scp
+  sort -u $dir/transcripts.txt &gt; $dir/text
+  utils/utt2spk_to_spk2utt.pl $dir/utt2spk &gt; $dir/spk2utt
+done
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="4-phone-sets-questions-l-compilation">4. Phone sets, questions, L compilation</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">utils/prepare_lang.sh --position-dependent-phones false data/local/dict \
+    &#34;&lt;SPOKEN_NOISE&gt;&#34; data/local/lang data/lang || exit 1;
+</code></pre></td></tr></table>
+</div>
+</div><p>上面shell脚本的目的是创建L.fst，音素模型，其中fst是Finite State Transducers（有限状态转换器）的缩写。找到这篇<a href="https://blog.csdn.net/DuishengChen/article/details/52473918" target="_blank" rel="noopener noreffer">Kaldi学习笔记 &ndash; 构建字典FST脚本 &ndash; prepare_lang.sh 关键内容解析</a>详细的说明了这个脚本的工作。而<a href="https://blog.csdn.net/mengjianmuzi/article/details/99499343" target="_blank" rel="noopener noreffer">关于prepare_lang的一点理解</a>给脚本进行了一些翻译和注释。</p>
+<blockquote>
+<p><a href="https://www.jianshu.com/p/4ad2add56b25" target="_blank" rel="noopener noreffer">Kaldi中FST(Finite State Transducer)含义及其可视化</a>
+L.fst: 音素词典（Phonetic Dictionary or Lexicon）模型，phone symbols作为输入，word symbols作为输出，如图Figure 1所示。
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/1256.png"
+        data-srcset="/images/1256.png, /images/1256.png 1.5x, /images/1256.png 2x"
+        data-sizes="auto"
+        alt="/images/1256.png"
+        title="Figure 1 L.fst结构" />
+L_disambig.fst是为了消除模棱两可（disambiguation）而引入的模型，表述为 the lexicon with disambiguation symbols。分歧的情况如：一个词是另一个词的前缀，cat 和 cats在同一个词典中，则需要&quot;k ae t #1&quot;； 有同音的词，red: &ldquo;r eh d #1&rdquo;, read: &ldquo;r eh d #2&rdquo;。</p>
+</blockquote>
+<p>我一直疑惑<code>lexiconp.txt</code>是怎么生成的，查了好久。结果竟然只是一段在词和音素之间插入1.0的代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">if [[ ! -f $srcdir/lexiconp.txt ]]; then
+  echo &#34;**Creating $srcdir/lexiconp.txt from $srcdir/lexicon.txt&#34;
+  perl -ape &#39;s/(\S+\s+)(.+)/${1}1.0\t$2/;&#39; &lt; $srcdir/lexicon.txt &gt; $srcdir/lexiconp.txt || exit 1;
+fi
+</code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/1257.png"
+        data-srcset="/images/1257.png, /images/1257.png 1.5x, /images/1257.png 2x"
+        data-sizes="auto"
+        alt="/images/1257.png"
+        title="lexiconp.txt" />
+那么L.fst是怎么得到的呢？
+通过<code>make_lexicon_fst.py</code>（现有的博客都说是.pl结尾，可能kaldi重构了）。还有一个消歧义的过程。具体的就看不懂了。<a href="https://shiweipku.gitbooks.io/chinese-doc-of-kaldi/content/decoding_graph_test.html" target="_blank" rel="noopener noreffer">解码图创建示例（测试阶段）</a>里有较为详细的文档讲解。</p>
+<h4 id="5-lm-training">5. LM training</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">local/aishell_train_lms.sh || exit 1;
+</code></pre></td></tr></table>
+</div>
+</div><p>这个shell脚本读取<code>data/local/train/text</code>,<code>data/local/dict/lexicon.txt</code>
+得到text的计数文件<code>word.counts</code>并以<code>word.counts</code>为基础添加<code>lexicon.txt</code>中的字（除了SIL）出现的次数到<code>unigram.counts</code>中。我就没深入看下去了，期间用到的脚本文件有:<code>get_word_map.pl</code>、<code>train_lm.sh --arpa --lmtype 3gram-mincount $dir || exit 1</code>;这个步骤的结果保存在<code>data/local/lm/3gram-mincount/lm_unpruned.gz</code>中。</p>
+<h4 id="6-g-compilation-check-lg-composition">6. G compilation, check LG composition</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">utils/format_lm.sh data/lang data/local/lm/3gram-mincount/lm_unpruned.gz \
+    data/local/dict/lexicon.txt data/lang_test || exit 1;
+</code></pre></td></tr></table>
+</div>
+</div><p>这个步骤是编译G.fst并将LG串联起来。</p>
+<blockquote>
+<p><a href="https://www.jianshu.com/p/4ad2add56b25" target="_blank" rel="noopener noreffer">Kaldi中FST(Finite State Transducer)含义及其可视化</a>
+G.fst: 语言模型，大部分是FSA（finite state acceptor, i.e. 每个arc的输入输出是相同的），如图Figure 2所示。
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/1258.png"
+        data-srcset="/images/1258.png, /images/1258.png 1.5x, /images/1258.png 2x"
+        data-sizes="auto"
+        alt="/images/1258.png"
+        title="Figure 2 G.fst结构（由指令词识别1-gram语法产生，disambiguation symbol #0 未加入）
+" /></p>
+</blockquote>
+<blockquote>
+<p><a href="https://hupeng.me/articles/25.html" target="_blank" rel="noopener noreffer">kaldi 训练 aishell 解析</a>
+utils/format_lm.sh:上述的语言工具基于第三方工具，为ARPA-format,脚本的作业是将其转换为fst，方便与之前的字典fst(L.fst)结合，发挥fst的优势。脚本最后会检测G.fst中是否存在没有单词的空回环，如果存在会报错，因为这会导致后续HLG determinization的出现错误。
+脚本utils/format_lm.sh解决把ARPA格式的语言模型转换成OpenFST格式类型。脚本用法如下：
+Usage: utils/format_lm.sh &lt;lang_dir&gt; <arpa-LM> <lexicon> &lt;out_dir&gt;
+E.g.: utils/format_lm.sh data/lang data/local/lm/foo.kn.gz data/local/dict/lexicon.txt data/lang_test
+Convert ARPA-format language models to FSTs.
+这个脚本的一些关键命令如下：
+Kaldi程序arpa2fst将ARPA格式的语言模型转换成一个加权有限状态转移机（实际上是接收机）。</p>
+</blockquote>
+<p>流程很复杂，未来可能再把L.fst，LM training，G.fst， LG composition另起一篇。（就是说现在时间条件不允许深入）</p>
+<h3 id="训练">训练</h3>
+<p>训练的环节开始我就读不懂了。主要是逻辑和概念不懂。也不浪费时间了。简单的去了解一下输入输出和功能。</p>
+<h4 id="1-mfcc-特征生成">1. MFCC 特征生成</h4>
+<p>这个环节和yesno项目的没有不同。主要就是获得train,test, dev三个集合的归一化的梅尔倒谱系数。最后修复排序错误，并会移除那些被指明需要特征数据或标注，但是却找不到被需要的数据的那些发音（utterances）。</p>
+<h4 id="2-训练单音素模型">2. 训练单音素模型</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">steps/train_mono.sh --cmd &#34;$train_cmd&#34; --nj 10 \
+  data/train data/lang exp/mono || exit 1;
+</code></pre></td></tr></table>
+</div>
+</div><p>参考<a href="https://zhuanlan.zhihu.com/p/82380716" target="_blank" rel="noopener noreffer">kaldi-GMM-HMM pipeline</a>，上面的shell脚本主要是对齐音素和每一帧音频的。<a href="https://blog.csdn.net/DanyHgc/article/details/75247158" target="_blank" rel="noopener noreffer">Kaldi 入门train_mono.sh详解</a>、<a href="https://blog.csdn.net/DuishengChen/article/details/52575926" target="_blank" rel="noopener noreffer">kaldi学习笔记 &ndash; 训练单音素（monophone）模型脚本 &ndash; steps/train_mono.sh</a>都有讲一些。
+对流程讲得最好的是：
+mkgraph 需要 lang_test 下的 L.fst G.fst phones.txt, words.txt , phones/silence.csl , phones/<a href="https://link.zhihu.com/?target=http%3A//disambig.int" target="_blank" rel="noopener noreffer">http://disambig.int</a></p>
+<p>以及 exp/tri 下的 tree, final.mdl</p>
+<blockquote>
+<p>在训练的job并行训练过程中，训练数据的各个子集合是分散到不同的处理器去进行训练，然后每轮迭代后会进行合并。
+下面就讲一下训练的过程：
+1.首先是初始化GMM，使用的脚本是/kaldi-trunk/src/gmmbin/gmm-init-mono，输出是0.mdl和tree文件；
+2.compile training graphs,使用的脚本是/kaldi-trunk/source/bin/compile-training-graphs，输入是tree,0.mdl和L.fst,输出是fits.JOB.gz，其是在训练过程中构建graph的过程；
+3.接下来是一个对齐的操作，kaldi-trunk/source/bin/align-equal-compiled；
+4.然后是基于GMM的声学模型进行最大似然估计得过程，脚本为/kaldi-trunk/src/gmmbin/gmm-est；
+5.然后进行迭代循环中进行操作，如果本步骤到了对齐的步骤，则调用脚本kaldi-kaldi/src/gmmbin/gmm-align-compiled；
+6.重新估计GMM，累计状态，用脚本/kaldi-trunk/src/gmmbin/gmm-acc-states-ali；调用新生成的参数(高斯数)重新估计GMM，调用脚本/kaldi-trunk/src/gmmbin/gmm-est；
+7.对分散在不同处理器上的结果进行合并，生成.mdl结果，调用脚本gmm-acc-sum；
+8.增加高斯数，如果没有超过设定的迭代次数，则跳转到步骤5重新进行训练
+最后生成的.mdl即为声学模型文件
+在离线识别阶段，即可以调用utils/mkgraph.sh；来对刚刚生成的声学文件进行构图
+之后解码，得到离线测试的识别率。</p>
+</blockquote>
+<h4 id="3-monophone-decoding-单音素解码">3. (Monophone decoding) 单音素解码</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">utils/mkgraph.sh data/lang_test exp/mono exp/mono/graph || exit 1;
+steps/decode.sh --cmd &#34;$decode_cmd&#34; --config conf/decode.config --nj 10 \
+  exp/mono/graph data/dev exp/mono/decode_dev
+steps/decode.sh --cmd &#34;$decode_cmd&#34; --config conf/decode.config --nj 10 \
+  exp/mono/graph data/test exp/mono/decode_test
+</code></pre></td></tr></table>
+</div>
+</div><p><code>mkgraph.sh</code>将L_disambig.fst 和 G.fst 复合生成LG.fst。中间经历了我看不懂的处理。最终生成用于解码的 HCLG.fst。</p>
+<h4 id="看不懂的部分">看不懂的部分</h4>
+<p>后面就已经看不懂了。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># Get alignments from monophone system.
+steps/align_si.sh --cmd &#34;$train_cmd&#34; --nj 10 \
+  data/train data/lang exp/mono exp/mono_ali || exit 1;
+
+# train tri1 [first triphone pass]
+steps/train_deltas.sh --cmd &#34;$train_cmd&#34; \
+ 2500 20000 data/train data/lang exp/mono_ali exp/tri1 || exit 1;
+
+# decode tri1
+utils/mkgraph.sh data/lang_test exp/tri1 exp/tri1/graph || exit 1;
+steps/decode.sh --cmd &#34;$decode_cmd&#34; --config conf/decode.config --nj 10 \
+  exp/tri1/graph data/dev exp/tri1/decode_dev
+steps/decode.sh --cmd &#34;$decode_cmd&#34; --config conf/decode.config --nj 10 \
+  exp/tri1/graph data/test exp/tri1/decode_test
+
+# align tri1
+steps/align_si.sh --cmd &#34;$train_cmd&#34; --nj 10 \
+  data/train data/lang exp/tri1 exp/tri1_ali || exit 1;
+
+# train tri2 [delta+delta-deltas]
+steps/train_deltas.sh --cmd &#34;$train_cmd&#34; \
+ 2500 20000 data/train data/lang exp/tri1_ali exp/tri2 || exit 1;
+
+# decode tri2
+utils/mkgraph.sh data/lang_test exp/tri2 exp/tri2/graph
+steps/decode.sh --cmd &#34;$decode_cmd&#34; --config conf/decode.config --nj 10 \
+  exp/tri2/graph data/dev exp/tri2/decode_dev
+steps/decode.sh --cmd &#34;$decode_cmd&#34; --config conf/decode.config --nj 10 \
+  exp/tri2/graph data/test exp/tri2/decode_test
+
+# train and decode tri2b [LDA+MLLT]
+steps/align_si.sh --cmd &#34;$train_cmd&#34; --nj 10 \
+  data/train data/lang exp/tri2 exp/tri2_ali || exit 1;
+
+# Train tri3a, which is LDA+MLLT,
+steps/train_lda_mllt.sh --cmd &#34;$train_cmd&#34; \
+ 2500 20000 data/train data/lang exp/tri2_ali exp/tri3a || exit 1;
+
+utils/mkgraph.sh data/lang_test exp/tri3a exp/tri3a/graph || exit 1;
+steps/decode.sh --cmd &#34;$decode_cmd&#34; --nj 10 --config conf/decode.config \
+  exp/tri3a/graph data/dev exp/tri3a/decode_dev
+steps/decode.sh --cmd &#34;$decode_cmd&#34; --nj 10 --config conf/decode.config \
+  exp/tri3a/graph data/test exp/tri3a/decode_test
+
+# From now, we start building a more serious system (with SAT), and we&#39;ll
+# do the alignment with fMLLR.
+
+steps/align_fmllr.sh --cmd &#34;$train_cmd&#34; --nj 10 \
+  data/train data/lang exp/tri3a exp/tri3a_ali || exit 1;
+
+steps/train_sat.sh --cmd &#34;$train_cmd&#34; \
+  2500 20000 data/train data/lang exp/tri3a_ali exp/tri4a || exit 1;
+
+utils/mkgraph.sh data/lang_test exp/tri4a exp/tri4a/graph
+steps/decode_fmllr.sh --cmd &#34;$decode_cmd&#34; --nj 10 --config conf/decode.config \
+  exp/tri4a/graph data/dev exp/tri4a/decode_dev
+steps/decode_fmllr.sh --cmd &#34;$decode_cmd&#34; --nj 10 --config conf/decode.config \
+  exp/tri4a/graph data/test exp/tri4a/decode_test
+
+steps/align_fmllr.sh  --cmd &#34;$train_cmd&#34; --nj 10 \
+  data/train data/lang exp/tri4a exp/tri4a_ali
+
+# Building a larger SAT system.
+
+steps/train_sat.sh --cmd &#34;$train_cmd&#34; \
+  3500 100000 data/train data/lang exp/tri4a_ali exp/tri5a || exit 1;
+
+utils/mkgraph.sh data/lang_test exp/tri5a exp/tri5a/graph || exit 1;
+steps/decode_fmllr.sh --cmd &#34;$decode_cmd&#34; --nj 10 --config conf/decode.config \
+   exp/tri5a/graph data/dev exp/tri5a/decode_dev || exit 1;
+steps/decode_fmllr.sh --cmd &#34;$decode_cmd&#34; --nj 10 --config conf/decode.config \
+   exp/tri5a/graph data/test exp/tri5a/decode_test || exit 1;
+
+steps/align_fmllr.sh --cmd &#34;$train_cmd&#34; --nj 10 \
+  data/train data/lang exp/tri5a exp/tri5a_ali || exit 1;
+
+# nnet3
+local/nnet3/run_tdnn.sh
+
+# chain
+local/chain/run_tdnn.sh
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="获取结果">获取结果</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># getting results (see RESULTS file)
+for x in exp/*/decode_test; do [ -d $x ] &amp;&amp; grep WER $x/cer_* | utils/best_wer.sh; done 2&gt;/dev/null
+for x in exp/*/*/decode_test; do [ -d $x ] &amp;&amp; grep WER $x/cer_* | utils/best_wer.sh; done 2&gt;/dev/null
+exit 0;
+</code></pre></td></tr></table>
+</div>
+</div><p>和上一篇文章一样的步骤。
+<a href="https://www.jianshu.com/p/09deba57f339" target="_blank" rel="noopener noreffer">Kaldi入门：yesno项目</a></p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-11-23</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://imchenmin.com/2020/11/23/%E5%AD%A6%E4%B9%A0kaldi%E4%B8%AD%E6%96%87aishell%E9%A1%B9%E7%9B%AE%E4%B8%8A/" data-title="学习Kaldi：中文Aishell项目（上）" data-hashtags="NLP,ASR"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://imchenmin.com/2020/11/23/%E5%AD%A6%E4%B9%A0kaldi%E4%B8%AD%E6%96%87aishell%E9%A1%B9%E7%9B%AE%E4%B8%8A/" data-hashtag="NLP"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://imchenmin.com/2020/11/23/%E5%AD%A6%E4%B9%A0kaldi%E4%B8%AD%E6%96%87aishell%E9%A1%B9%E7%9B%AE%E4%B8%8A/" data-title="学习Kaldi：中文Aishell项目（上）" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://imchenmin.com/2020/11/23/%E5%AD%A6%E4%B9%A0kaldi%E4%B8%AD%E6%96%87aishell%E9%A1%B9%E7%9B%AE%E4%B8%8A/" data-title="学习Kaldi：中文Aishell项目（上）"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://imchenmin.com/2020/11/23/%E5%AD%A6%E4%B9%A0kaldi%E4%B8%AD%E6%96%87aishell%E9%A1%B9%E7%9B%AE%E4%B8%8A/" data-title="学习Kaldi：中文Aishell项目（上）"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://imchenmin.com/2020/11/23/%E5%AD%A6%E4%B9%A0kaldi%E4%B8%AD%E6%96%87aishell%E9%A1%B9%E7%9B%AE%E4%B8%8A/" data-title="学习Kaldi：中文Aishell项目（上）" data-description=""><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://imchenmin.com/2020/11/23/%E5%AD%A6%E4%B9%A0kaldi%E4%B8%AD%E6%96%87aishell%E9%A1%B9%E7%9B%AE%E4%B8%8A/" data-title="学习Kaldi：中文Aishell项目（上）" data-description=""><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://imchenmin.com/2020/11/23/%E5%AD%A6%E4%B9%A0kaldi%E4%B8%AD%E6%96%87aishell%E9%A1%B9%E7%9B%AE%E4%B8%8A/" data-title="学习Kaldi：中文Aishell项目（上）"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/nlp/">NLP</a>,&nbsp;<a href="/tags/asr/">ASR</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/2020/11/23/%E4%BD%BF%E7%94%A8python%E5%BC%80%E5%8F%91%E6%A1%8C%E9%9D%A2%E5%BA%94%E7%94%A8%E7%9A%84%E4%B8%80%E4%B8%AA%E4%BD%93%E9%AA%8C/" class="prev" rel="prev" title="使用Python开发桌面应用的一个体验"><i class="fas fa-angle-left fa-fw"></i>使用Python开发桌面应用的一个体验</a>
+            <a href="/2020/11/23/leetcode26/" class="next" rel="next" title="LeetCode26">LeetCode26<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="utterances"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://utteranc.es/">Utterances</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">
+                    
+                    <p>ChenMin</p>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">ChenMin</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/typeit/typeit.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{"utterances":{"darkTheme":"github-dark","issueTerm":"pathname","label":"","lightTheme":"github-light","repo":"chenminken/chenminken.github.io"}},"data":{"id-1":"ChenMin","id-2":"ChenMin"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"},"typeit":{"cursorChar":null,"cursorSpeed":null,"data":{"id-1":["id-1"],"id-2":["id-2"]},"duration":null,"speed":null}};</script><script type="text/javascript" src="/js/theme.min.js"></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'G-H2W2G9V45E');
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=G-H2W2G9V45E" async></script></body>
+</html>

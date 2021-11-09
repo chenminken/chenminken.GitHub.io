@@ -5,31 +5,31 @@
         <description>Linux - 标签 - ChenMin</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 09 Dec 2020 00:03:47 &#43;0000</lastBuildDate><atom:link href="http://imchenmin.com/tags/linux/" rel="self" type="application/rss+xml" /><item>
     <title>cvat安装指南</title>
-    <link>http://imchenmin.com/cvat%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97/</link>
+    <link>http://imchenmin.com/2020/12/09/cvat%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97/</link>
     <pubDate>Wed, 09 Dec 2020 00:03:47 &#43;0000</pubDate>
     <author>作者</author>
-    <guid>http://imchenmin.com/cvat%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97/</guid>
+    <guid>http://imchenmin.com/2020/12/09/cvat%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97/</guid>
     <description><![CDATA[安装CVAT，使用docker安装其实很明确，但是国内的网络环境很复杂，容易报错。]]></description>
 </item><item>
     <title>Ubuntu 18.04静态IP设置和遇到的虚拟机网卡问题</title>
-    <link>http://imchenmin.com/ubuntu-18-04%E9%9D%99%E6%80%81ip%E8%AE%BE%E7%BD%AE%E5%92%8C%E9%81%87%E5%88%B0%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E5%8D%A1%E9%97%AE%E9%A2%98/</link>
+    <link>http://imchenmin.com/2020/11/23/ubuntu-18.04%E9%9D%99%E6%80%81ip%E8%AE%BE%E7%BD%AE%E5%92%8C%E9%81%87%E5%88%B0%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E5%8D%A1%E9%97%AE%E9%A2%98/</link>
     <pubDate>Mon, 23 Nov 2020 19:34:17 &#43;0000</pubDate>
     <author>作者</author>
-    <guid>http://imchenmin.com/ubuntu-18-04%E9%9D%99%E6%80%81ip%E8%AE%BE%E7%BD%AE%E5%92%8C%E9%81%87%E5%88%B0%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E5%8D%A1%E9%97%AE%E9%A2%98/</guid>
+    <guid>http://imchenmin.com/2020/11/23/ubuntu-18.04%E9%9D%99%E6%80%81ip%E8%AE%BE%E7%BD%AE%E5%92%8C%E9%81%87%E5%88%B0%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E5%8D%A1%E9%97%AE%E9%A2%98/</guid>
     <description><![CDATA[帮同学的实验室配置静态IP，将其中的流程和关键记录下来。 校园网内使用DHCP来分配IP地址，有效期为2天，如果两天之内设备未续租，IP地址会]]></description>
 </item><item>
     <title>新服务器迁移postgres数据库</title>
-    <link>http://imchenmin.com/%E6%96%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%81%E7%A7%BBpostgres%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
+    <link>http://imchenmin.com/2020/11/21/%E6%96%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%81%E7%A7%BBpostgres%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
     <pubDate>Sat, 21 Nov 2020 09:39:33 &#43;0000</pubDate>
     <author>作者</author>
-    <guid>http://imchenmin.com/%E6%96%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%81%E7%A7%BBpostgres%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
+    <guid>http://imchenmin.com/2020/11/21/%E6%96%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%81%E7%A7%BBpostgres%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
     <description><![CDATA[课题组要部署一个云服务，之前用的是我个人申请的学生版服务器，价格优惠。快到期需要续费，但是优惠版的服务器不能够继续以优惠价格续费，正常的价格]]></description>
 </item><item>
     <title>用阿里云服务器自己搭建2do同步caldav服务器</title>
-    <link>http://imchenmin.com/%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%87%AA%E5%B7%B1%E6%90%AD%E5%BB%BA2do%E5%90%8C%E6%AD%A5caldav%E6%9C%8D%E5%8A%A1%E5%99%A8/</link>
+    <link>http://imchenmin.com/2019/09/23/%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%87%AA%E5%B7%B1%E6%90%AD%E5%BB%BA2do%E5%90%8C%E6%AD%A5caldav%E6%9C%8D%E5%8A%A1%E5%99%A8/</link>
     <pubDate>Mon, 23 Sep 2019 17:33:29 &#43;0000</pubDate>
     <author>作者</author>
-    <guid>http://imchenmin.com/%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%87%AA%E5%B7%B1%E6%90%AD%E5%BB%BA2do%E5%90%8C%E6%AD%A5caldav%E6%9C%8D%E5%8A%A1%E5%99%A8/</guid>
+    <guid>http://imchenmin.com/2019/09/23/%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%87%AA%E5%B7%B1%E6%90%AD%E5%BB%BA2do%E5%90%8C%E6%AD%A5caldav%E6%9C%8D%E5%8A%A1%E5%99%A8/</guid>
     <description><![CDATA[用阿里云服务器自己搭建2do同步caldav服务器 一个月前，把任务管理从Microsoft TO-DO迁移到2Do中，自己手上常用一台小米9和]]></description>
 </item></channel>
 </rss>

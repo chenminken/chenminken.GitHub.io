@@ -5,10 +5,10 @@
         <description>数据库 - 标签 - ChenMin</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Fri, 29 Oct 2021 21:59:18 &#43;0800</lastBuildDate><atom:link href="http://imchenmin.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="self" type="application/rss+xml" /><item>
     <title>新服务器迁移postgres数据库</title>
-    <link>http://imchenmin.com/%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEpostgres/</link>
+    <link>http://imchenmin.com/2021/10/29/%E6%96%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%81%E7%A7%BBpostgres%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
     <pubDate>Fri, 29 Oct 2021 21:59:18 &#43;0800</pubDate>
     <author>作者</author>
-    <guid>http://imchenmin.com/%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEpostgres/</guid>
+    <guid>http://imchenmin.com/2021/10/29/%E6%96%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%81%E7%A7%BBpostgres%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
     <description><![CDATA[课题组要部署一个云服务，之前用的是我个人申请的学生版服务器，价格优惠。快到期需要续费，但是优惠版的服务器不能够继续以优惠价格续费，正常的价格]]></description>
 </item></channel>
 </rss>
