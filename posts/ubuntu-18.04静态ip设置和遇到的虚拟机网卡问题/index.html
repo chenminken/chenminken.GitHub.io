@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Ubuntu 18.04静态IP设置和遇到的虚拟机网卡问题 - ChenMin</title><meta name="Description" content=""><meta property="og:title" content="Ubuntu 18.04静态IP设置和遇到的虚拟机网卡问题" />
+<meta property="og:description" content="帮同学的实验室配置静态IP，将其中的流程和关键记录下来。 校园网内使用DHCP来分配IP地址，有效期为2天，如果两天之内设备未续租，IP地址会" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://imchenmin.com/posts/ubuntu-18.04%E9%9D%99%E6%80%81ip%E8%AE%BE%E7%BD%AE%E5%92%8C%E9%81%87%E5%88%B0%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E5%8D%A1%E9%97%AE%E9%A2%98/" />
+<meta property="article:published_time" content="2020-11-23T19:34:17+00:00" />
+<meta property="article:modified_time" content="2020-11-23T19:34:17+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Ubuntu 18.04静态IP设置和遇到的虚拟机网卡问题"/>
+<meta name="twitter:description" content="帮同学的实验室配置静态IP，将其中的流程和关键记录下来。 校园网内使用DHCP来分配IP地址，有效期为2天，如果两天之内设备未续租，IP地址会"/>
+<meta name="application-name" content="ChenMin">
+<meta name="apple-mobile-web-app-title" content="ChenMin"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://imchenmin.com/posts/ubuntu-18.04%E9%9D%99%E6%80%81ip%E8%AE%BE%E7%BD%AE%E5%92%8C%E9%81%87%E5%88%B0%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E5%8D%A1%E9%97%AE%E9%A2%98/" /><link rel="prev" href="http://imchenmin.com/posts/opencv%E5%92%8Cnumpy%E7%AC%94%E8%AE%B0/" /><link rel="next" href="http://imchenmin.com/posts/%E4%BB%A5notion%E4%B8%BA%E5%9F%BA%E7%A1%80%E7%9A%84%E8%87%AA%E6%88%91%E7%AE%A1%E7%90%86%E4%BD%93%E7%B3%BB/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Ubuntu 18.04静态IP设置和遇到的虚拟机网卡问题",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/imchenmin.com\/posts\/ubuntu-18.04%E9%9D%99%E6%80%81ip%E8%AE%BE%E7%BD%AE%E5%92%8C%E9%81%87%E5%88%B0%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E5%8D%A1%E9%97%AE%E9%A2%98\/"
+        },"genre": "posts","keywords": "计算机网络, Linux","wordcount":  1060 ,
+        "url": "http:\/\/imchenmin.com\/posts\/ubuntu-18.04%E9%9D%99%E6%80%81ip%E8%AE%BE%E7%BD%AE%E5%92%8C%E9%81%87%E5%88%B0%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E5%8D%A1%E9%97%AE%E9%A2%98\/","datePublished": "2020-11-23T19:34:17+00:00","dateModified": "2020-11-23T19:34:17+00:00","publisher": {
+            "@type": "Organization",
+            "name": "ChenMin"},"author": {
+                "@type": "Person",
+                "name": "ChenMin"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : '' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="ChenMin"><span id="id-1" class="typeit"></span></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search anything" id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="ChenMin"><span id="id-2" class="typeit"></span></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search anything" id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Ubuntu 18.04静态IP设置和遇到的虚拟机网卡问题</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>ChenMin</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/"><i class="far fa-folder fa-fw"></i>计算机</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-11-23">2020-11-23</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1060 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents"></nav></div>
+            </div><div class="content" id="content"><p>帮同学的实验室配置静态IP，将其中的流程和关键记录下来。</p>
+<p>校园网内使用DHCP来分配IP地址，有效期为2天，如果两天之内设备未续租，IP地址会被收回。</p>
+<p>实验室的服务器需要远程登陆，需要一个静态IP来保证服务器的可访问性。</p>
+<p>在申请了几个静态IP之后，会获得一组数据。1) 172.xxx.xxx.xxx、2) 255.255.255.0、3) 172.xxx.xxx.254、4) vlanxx。其中1）是静态IP的地址，2）是子网掩码，也可以用24表示。3）网关地址，4）交换机的vlan接口，由交换机管理员配置。</p>
+<p>学校中由网络中心运营管理交换机，需要先联系工程师在网关中添加vlanxx接口，并且把服务器的所有MAC地址绑定静态IP地址组。</p>
+<p>服务器的操作系统和版本是Ubuntu 18.04 server。网络管理使用netplan。之前同学装了gnome-shell。我先尝试使用简易桌面自带的网络管理程序，ifconfig -a发现对网卡配置不起作用。</p>
+<p>直接修改netplan程序位于\etc\netplan\01-netcfg.yaml。</p>
+<p>当时该文件基本的结构如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eno1:
+      dhcp4: true
+  bridges:
+    vir0br:
+      interfaces: [eno1]
+      dhcp4: true
+</code></pre></td></tr></table>
+</div>
+</div><p>需要注意的就是eno1和vir0br。其中dhcp4代表着是否使用ipv4版本的dhcp地址分配。</p>
+<p>vir0br是<a href="https://virt-manager.org/" target="_blank" rel="noopener noreffer">https://virt-manager.org/</a>虚拟机管理器NAT模式下的网桥接口。服务器中通过virt-manager运行着windows 系统。</p>
+<p>配置静态ip需要修改eno1的配置。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">eno1:
+  dhcp4: no
+  addresses: [172.xxx.xxx.xxx/24]
+  gateway4: 172.xxx.xxx.254
+  nameservers:
+    addresses: [8.8.8.8, 8.8.4.4]
+</code></pre></td></tr></table>
+</div>
+</div><p>然后netplan apply。接着ifconfig -a 查看网卡ip是否更改，如果没有更改，不用着急。很可能是配置文件的问题。而不是需要重启或者sudo service networking restart重启网卡。</p>
+<p>需要注意的是这里有一个bridge。bridge是一个虚拟网络设备，具有网络设备的特征，可以配置IP，MAC地址等。bridge不分接入进来的设备是虚拟的还是物理的，当eno1加入vir0br之后，从外面网络收到的数据包将无条件的转发给vir0br，自己变成一根网线。先用brctl show查看网桥状态然后.ifconfig &lt;网桥名&gt; down, brctl delbr &lt;网桥名&gt;删除网桥，将01-netcf.yaml中的bridge 部分删掉。（但是会造成虚拟机网络异常）。 重新netplan apply，完成静态IP的配置。</p>
+<p>对于windows虚拟机的网络配置还在检索学习中。网上较少Linux寄主机，Windows虚拟机的配置情况。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-11-23</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://imchenmin.com/posts/ubuntu-18.04%E9%9D%99%E6%80%81ip%E8%AE%BE%E7%BD%AE%E5%92%8C%E9%81%87%E5%88%B0%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E5%8D%A1%E9%97%AE%E9%A2%98/" data-title="Ubuntu 18.04静态IP设置和遇到的虚拟机网卡问题" data-hashtags="计算机网络,Linux"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://imchenmin.com/posts/ubuntu-18.04%E9%9D%99%E6%80%81ip%E8%AE%BE%E7%BD%AE%E5%92%8C%E9%81%87%E5%88%B0%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E5%8D%A1%E9%97%AE%E9%A2%98/" data-hashtag="计算机网络"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://imchenmin.com/posts/ubuntu-18.04%E9%9D%99%E6%80%81ip%E8%AE%BE%E7%BD%AE%E5%92%8C%E9%81%87%E5%88%B0%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E5%8D%A1%E9%97%AE%E9%A2%98/" data-title="Ubuntu 18.04静态IP设置和遇到的虚拟机网卡问题" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://imchenmin.com/posts/ubuntu-18.04%E9%9D%99%E6%80%81ip%E8%AE%BE%E7%BD%AE%E5%92%8C%E9%81%87%E5%88%B0%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E5%8D%A1%E9%97%AE%E9%A2%98/" data-title="Ubuntu 18.04静态IP设置和遇到的虚拟机网卡问题"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://imchenmin.com/posts/ubuntu-18.04%E9%9D%99%E6%80%81ip%E8%AE%BE%E7%BD%AE%E5%92%8C%E9%81%87%E5%88%B0%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E5%8D%A1%E9%97%AE%E9%A2%98/" data-title="Ubuntu 18.04静态IP设置和遇到的虚拟机网卡问题"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://imchenmin.com/posts/ubuntu-18.04%E9%9D%99%E6%80%81ip%E8%AE%BE%E7%BD%AE%E5%92%8C%E9%81%87%E5%88%B0%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E5%8D%A1%E9%97%AE%E9%A2%98/" data-title="Ubuntu 18.04静态IP设置和遇到的虚拟机网卡问题" data-description=""><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://imchenmin.com/posts/ubuntu-18.04%E9%9D%99%E6%80%81ip%E8%AE%BE%E7%BD%AE%E5%92%8C%E9%81%87%E5%88%B0%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E5%8D%A1%E9%97%AE%E9%A2%98/" data-title="Ubuntu 18.04静态IP设置和遇到的虚拟机网卡问题" data-description=""><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://imchenmin.com/posts/ubuntu-18.04%E9%9D%99%E6%80%81ip%E8%AE%BE%E7%BD%AE%E5%92%8C%E9%81%87%E5%88%B0%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E5%8D%A1%E9%97%AE%E9%A2%98/" data-title="Ubuntu 18.04静态IP设置和遇到的虚拟机网卡问题"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>,&nbsp;<a href="/tags/linux/">Linux</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/opencv%E5%92%8Cnumpy%E7%AC%94%E8%AE%B0/" class="prev" rel="prev" title="OpenCV和numpy笔记"><i class="fas fa-angle-left fa-fw"></i>OpenCV和numpy笔记</a>
+            <a href="/posts/%E4%BB%A5notion%E4%B8%BA%E5%9F%BA%E7%A1%80%E7%9A%84%E8%87%AA%E6%88%91%E7%AE%A1%E7%90%86%E4%BD%93%E7%B3%BB/" class="next" rel="next" title="以Notion为基础的自我管理体系">以Notion为基础的自我管理体系<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="utterances"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://utteranc.es/">Utterances</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">
+                    
+                    <p>ChenMin</p>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">ChenMin</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/typeit/typeit.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{"utterances":{"darkTheme":"github-dark","issueTerm":"pathname","label":"","lightTheme":"github-light","repo":"chenminken/chenminken.github.io"}},"data":{"id-1":"ChenMin","id-2":"ChenMin"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"},"typeit":{"cursorChar":null,"cursorSpeed":null,"data":{"id-1":["id-1"],"id-2":["id-2"]},"duration":null,"speed":null}};</script><script type="text/javascript" src="/js/theme.min.js"></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'G-H2W2G9V45E');
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=G-H2W2G9V45E" async></script></body>
+</html>
