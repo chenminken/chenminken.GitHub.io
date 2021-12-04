@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>OpenCV和numpy笔记 - ChenMin</title><meta name="Description" content=""><meta property="og:title" content="OpenCV和numpy笔记" />
+<meta property="og:description" content="使用K-means做视频图像分割的作业的时候，遇到一个问题值得记录。 该代码的功能是使用K-means做图像分割并保存图像与视频。 遇到的问题是" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://imchenmin.com/posts/opencv-numpy/" />
+<meta property="article:published_time" content="2020-11-22T20:33:53+00:00" />
+<meta property="article:modified_time" content="2020-11-22T20:33:53+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="OpenCV和numpy笔记"/>
+<meta name="twitter:description" content="使用K-means做视频图像分割的作业的时候，遇到一个问题值得记录。 该代码的功能是使用K-means做图像分割并保存图像与视频。 遇到的问题是"/>
+<meta name="application-name" content="ChenMin">
+<meta name="apple-mobile-web-app-title" content="ChenMin"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://imchenmin.com/posts/opencv-numpy/" /><link rel="prev" href="http://imchenmin.com/posts/kaldi2/" /><link rel="next" href="http://imchenmin.com/posts/ubuntu-network/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "OpenCV和numpy笔记",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/imchenmin.com\/posts\/opencv-numpy\/"
+        },"genre": "posts","keywords": "OpenCV, Numpy, Python","wordcount":  650 ,
+        "url": "http:\/\/imchenmin.com\/posts\/opencv-numpy\/","datePublished": "2020-11-22T20:33:53+00:00","dateModified": "2020-11-22T20:33:53+00:00","publisher": {
+            "@type": "Organization",
+            "name": "ChenMin"},"author": {
+                "@type": "Person",
+                "name": "ChenMin"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : '' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="ChenMin"><span id="id-1" class="typeit"></span></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search anything" id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="ChenMin"><span id="id-2" class="typeit"></span></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search anything" id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">OpenCV和numpy笔记</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>ChenMin</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/"><i class="far fa-folder fa-fw"></i>计算机</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-11-22">2020-11-22</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 650 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#参考网页">参考网页</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>使用K-means做视频图像分割的作业的时候，遇到一个问题值得记录。</p>
+<p>该代码的功能是使用K-means做图像分割并保存图像与视频。</p>
+<p>遇到的问题是kmean之后得到的是每一个像素点的分类标签，需要将这些标签可视化成为分割(Segmentation)的结果视频。一开始没有直接找到相关的函数，搜索查询后给的建议都是使用<code>matlibplot</code>的<code>plt.imshow()</code>函数来实现，但是我不想要每次保存成为图片再转成视频，考虑到opencv-python的底层使用<code>numpy.array</code>来表述图像的。一个BGR图像相当于一个3维uint8数组（w,h,c)。要做的就是生成一个标签到像素的映射关系。这里我用的是<code>matplotlib.cm</code> color map 功能。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">x = np.linspace(0.0, 1.0, 10)
+rgb = cm.get_cmap(plt.get_cmap(&#39;Set1&#39;))(x)[np.newaxis, :, :3][0]
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">import numpy as np
+from numpy.matlib import repmat
+from sklearn.preprocessing import normalize
+import matplotlib.pyplot as plt
+from matplotlib import cm
+from sklearn.cluster import KMeans
+import cv2
+from PIL import Image
+
+n_cl=5
+
+videoCapture = cv2.VideoCapture(&#39;road_video.mov&#39;)
+fps = videoCapture.get(cv2.CAP_PROP_FPS)
+size = (int(videoCapture.get(cv2.CAP_PROP_FRAME_WIDTH)),
+        int(videoCapture.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+videoWriter = cv2.VideoWriter(&#39;output.mp4&#39;, cv2.VideoWriter_fourcc(*&#39;mp4v&#39;), (fps/10), size)
+
+def kmeans(data, n_cl, verbose=True):
+    n_samples, dim = data.shape
+    centers = data[np.random.choice(range(n_samples), size=n_cl)]
+    old_labels = np.zeros(shape=n_cl)
+    while True:
+        distances = np.zeros((n_samples, n_cl))
+        for cluster_idx, cluster in enumerate(centers):
+            distances[:, cluster_idx] = np.sum(np.square(data - repmat(cluster, n_samples, 1)), axis=1)
+        new_labels = np.argmin(distances, axis=1)
+        for l in range(0, n_cl):
+            centers[l] = np.mean(data[new_labels==l], axis=0)
+        if verbose:
+            fig, ax = plt.subplots()
+            ax.scatter(data[:, 0], data[:, 1], cluster=new_labels, s=40)
+            ax.plot(centers[:, 0], centers[:, 1], &#39;r*&#39;, markersize=20)
+            plt.waitforbuttonpress()
+            plt.close()
+        if np.array_equal(new_labels, old_labels):
+            break
+        old_labels = new_labels
+    return new_labels
+
+count = 0
+x = np.linspace(0.0, 1.0, 10)
+rgb = cm.get_cmap(plt.get_cmap(&#39;Set1&#39;))(x)[np.newaxis, :, :3][0]
+
+while True:
+    print(count)
+    count += 1
+#   load the frame
+    success, frame = videoCapture.read()
+    if not success:
+        break
+    img = np.float32(frame)
+    h,w,c = img.shape
+    # print(h,w,c)
+#   add coordinates
+    row_indexes = np.arange(0, h)
+    col_indexes = np.arange(0, w)
+    coordinates = np.zeros(shape=(h,w,2))
+    coordinates[..., 0] = normalize(repmat(row_indexes, w, 1).T)
+    coordinates[..., 1] = normalize(repmat(col_indexes, h, 1))
+    data = np.concatenate((img, coordinates), axis=-1)
+    data = np.reshape(data, newshape=(w *h, 5))
+    labels = kmeans(data, n_cl=n_cl, verbose=False)
+
+    print(&#39;after&#39;)
+    labels = labels.flatten()
+    segmented_image = rgb[labels.flatten()]
+    # print(segmented_image)
+    segmented_image = segmented_image.reshape(img.shape)
+    plt.imshow(segmented_image)
+    # # plt.imshow(np.reshape(labels, (h, w)), cmap=&#34;hsv&#34;)
+    plt.savefig(&#34;lab9/&#34;+str(count-1))
+    segmented_image = segmented_image *255
+    segmented_image = segmented_image.astype(&#39;uint8&#39;)
+    videoWriter.write(segmented_image)
+
+videoWriter.release()
+videoCapture.release()
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="参考网页">参考网页</h2>
+<p><a href="https://blog.csdn.net/llh_1178/article/details/77833447">https://blog.csdn.net/llh_1178/article/details/77833447</a></p>
+<p><a href="https://docs.opencv.org/3.4/d4/dba/classcv_1_1viz_1_1Color.html">https://docs.opencv.org/3.4/d4/dba/classcv_1_1viz_1_1Color.html</a></p>
+<p><a href="https://realpython.com/python-opencv-color-spaces/">https://realpython.com/python-opencv-color-spaces/</a></p>
+<p><a href="https://www.thepythoncode.com/article/kmeans-for-image-segmentation-opencv-python">https://www.thepythoncode.com/article/kmeans-for-image-segmentation-opencv-python</a></p>
+<p><a href="https://pvss.github.io/Opencv+Python.html">https://pvss.github.io/Opencv+Python.html</a></p>
+<p><a href="https://stackoverflow.com/questions/9280653/writing-numpy-arrays-using-cv2-videowriter">https://stackoverflow.com/questions/9280653/writing-numpy-arrays-using-cv2-videowriter</a></p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-11-22</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://imchenmin.com/posts/opencv-numpy/" data-title="OpenCV和numpy笔记" data-hashtags="OpenCV,Numpy,Python"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://imchenmin.com/posts/opencv-numpy/" data-hashtag="OpenCV"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://imchenmin.com/posts/opencv-numpy/" data-title="OpenCV和numpy笔记" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://imchenmin.com/posts/opencv-numpy/" data-title="OpenCV和numpy笔记"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://imchenmin.com/posts/opencv-numpy/" data-title="OpenCV和numpy笔记"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://imchenmin.com/posts/opencv-numpy/" data-title="OpenCV和numpy笔记" data-description=""><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://imchenmin.com/posts/opencv-numpy/" data-title="OpenCV和numpy笔记" data-description=""><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://imchenmin.com/posts/opencv-numpy/" data-title="OpenCV和numpy笔记"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/opencv/">OpenCV</a>,&nbsp;<a href="/tags/numpy/">Numpy</a>,&nbsp;<a href="/tags/python/">Python</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/kaldi2/" class="prev" rel="prev" title="Kaldi入门(一):yesno项目"><i class="fas fa-angle-left fa-fw"></i>Kaldi入门(一):yesno项目</a>
+            <a href="/posts/ubuntu-network/" class="next" rel="next" title="Ubuntu 18.04静态IP设置和遇到的虚拟机网卡问题">Ubuntu 18.04静态IP设置和遇到的虚拟机网卡问题<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="utterances"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://utteranc.es/">Utterances</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">
+                    
+                    <p>ChenMin</p>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">ChenMin</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/typeit/typeit.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{"utterances":{"darkTheme":"github-dark","issueTerm":"pathname","label":"","lightTheme":"github-light","repo":"chenminken/chenminken.github.io"}},"data":{"id-1":"ChenMin","id-2":"ChenMin"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"},"typeit":{"cursorChar":null,"cursorSpeed":null,"data":{"id-1":["id-1"],"id-2":["id-2"]},"duration":null,"speed":null}};</script><script type="text/javascript" src="/js/theme.min.js"></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'G-H2W2G9V45E');
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=G-H2W2G9V45E" async></script></body>
+</html>
